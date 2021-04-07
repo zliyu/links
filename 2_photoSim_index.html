@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Photo Sim</title>
+      <!-- Last Update 4_7_18 5:41pm by EB  -->
+      <meta charset="utf-8"/>
+      <link rel="stylesheet" type="text/css" href="2_photoSim_style.css">
+      <script src="jquery-1.12.4.js"></script>
+      <script src="jquery-ui.js"></script>
+      <link rel="stylesheet" href="jquery-ui.css">
+   </head>
+   <body class="noselect" style="font-family: Calibri;" onload="setup();">
+      <div id="activeArea">
+      <div id="film" style="visibility: visible;"></div>
+      <div id="instructions" style="visibility: visible;">
+         <div style="position: fixed; width: 590px; height: 335px; background: #fff; margin-left: 155px; margin-top: 80px; border: 1px solid black; font-size: 14px; font-weight: bold; padding: 7px; z-index: 2;">
+            <!-- <input type="image" src="speaker.png" class="speaker" style="width: 25px; height: 25px;" onclick="termType = 'n1'; narration();  console.log(termType); " /> -->
+            <p align='center'><font size="5"> Can Light Energy Become Glucose?</font></p>You will conduct scientific experiments to explore <font color='#996633'>whether <font color='orange'>light energy</font> can be <font color="fusha">transformed into</font> <font color='green'>glucose (sugar)</font></font></u> using the simulation.<br>
+			
+            <ol>
+               <li><img src='predict.png'>Make your <font color="red">hypothesis</font>.</li>
+               <li><img src='experiment_icon.png'>Set up experiments to TEST your hypothesis by setting your <font color="purple"><a onclick="stopAudio(); showInfo('variables');" href="javascript:void(0);">variables</a></font> (amounts of <font color="orange">light energy</font> and <font color="blue">matter</font>).</li>
+               <li><img src='observe_icon.png'>Observe what happens to <font color="orange">light energy</font> and <font color="blue">matter (carbon dioxide and water)</font>.</li>
+               <li><img src='datacollection_icon.png'>Record data from the <mark>Energy <u>GRAPH</u></mark> and the <span style='background-color: #66b9bf'>Matter <u>GRAPH</u>.</span></li>
+			   <li><img src='unlocked.png'>Run at least <font color="#009933">2 different</font> trials to <u>UNLOCK</u> the <font color="red">ANALYSIS</font> questions.</li>
+			   <li><img src="analysis_icon.png">Scroll down to answer your <font color="red">ANALYSIS</font> questions.</li>
+            </ol>
+            You can review these instructions at any time by clicking on the grey box with the question mark.
+         </div>
+         <button class="submit" style="margin-left: 420px; margin-top: 405px; width: 60px; height: 18px; position: fixed; border: 1px solid black; z-index: 2;" 
+            onclick="document.getElementById('instructions').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; stopAudio(); saveStateToWISE('alert-instruction-close'); preHAgain(true);">Close</button>
+      </div>
+      <div class="alertFrame" id="alertBoxTerms" style="visibility: hidden;">
+         <div class="alertText" id="alertBoxTermsFrame">
+            <button class="close" onclick="stopAudio(); resetAlertBoxSize(300); document.getElementById('alertBoxTerms').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; alerting = false;" style="position: absolute; margin-left: 210px; margin-top: -14px; saveStateToWISE('term_X');">X</button>
+            <p id="alertTextTerms" style="margin-top: 10px; font-size: 15px;"></p>
+         </div>
+      </div>
+      <div id="alertBoxHypothesis" class="alertFrame" style="visibility: hidden; width: 500px; height: 300px;">
+         <div class="alertTextH">
+            <img src="predict.png"><span id="alertBoxHText" style="margin-top: 25px; font-size: 20px; font-weight: bold; color: blue" ></span>
+            <p id="alertBoxHTextPrompt" >When</p>
+            <div id="optionWrapper">
+               <select name="hypothesisTxt1" id="hypothesisTxt1" style="float: left;" onchange="this.style.backgroundColor = getColor(this.value);">
+                  <option selected disabled hidden>Choose one</option>
+                  <option value="1"></option>
+                  <option value="2"></option>
+                  <option value="3"></option>
+                  <option value="4"></option>
+               </select>
+               <p id="hypothesisTxt2" style="float: left; margin-right: 7px; margin-left: 5px;">present, <font color='orange'>light energy</font> can be <u>transformed into</u></p>
+               <select name="hypothesisTxt3" id="hypothesisTxt3" onchange="this.style.backgroundColor = getColor(this.value); enableSubmit();">
+                  <option selected disabled hidden>Choose one</option>
+                  <option value="1"></option>
+                  <option value="2"></option>
+                  <option value="3"></option>
+                  <option value="4"></option>
+               </select>
+			   .
+            </div>
+            <button id="submitHBtn" class="submit2" style="visibility: hidden; position: absolute; margin-left: -45px;  margin-top: 70px; width: 90px;" onclick="stopAudio(); document.getElementById('alertBoxHypothesis').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; stopAudio(); alertBoxHypothesisPart2(); document.getElementById('submitHBtn').style.visibility = 'hidden'; ">Submit</button>
+         </div>
+      </div>
+      <div id="alertBoxHypothesisPart2" class="alertFrame" style="visibility: hidden; width: 500px; height: 300px;">
+         <div class="alertTextH">
+            <img src="predict.png"><span id="promptTxt" style="margin-top: 25px; font-size: 20px; font-weight: bold; color: blue" ></span>
+            <p style="text-align: left; margin-left: 20px; font-size: 15px; line-height: 30px;"><span id="htxt"></span><span id="h1txt" class="hBox"></span>
+               <span id="h2txt"></span>
+               <span id="h3txt" class="hBox"></span>.
+            <p style="font-size: 15px; margin-top: 30px; "><font color="red">Is this correct? Once you submit it, you <u><font color='red'>CANNOT</font></u> change your hypothesis.</font></p>
+            <button class="submit2" style="position: absolute; margin-left: -80px; margin-top: 20px; width: 90px;" onclick="stopAudio(); document.getElementById('alertBoxHypothesisPart2').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; saveStateToWISE('alert-submit-hypothesis-no'); stopAudio(); pageNum--; preHAgain(true);">No</button>
+			<button class="submit2" style="position: absolute; margin-left: 30px;  margin-top: 20px; width: 90px;" onclick="stopAudio(); document.getElementById('alertBoxHypothesisPart2').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; saveStateToWISE('alert-submit-hypothesis-yes'); stopAudio(); recordHypothesisInNotes(1); preHAgain(false);">Yes</button>
+			
+         </div>
+      </div>
+      <div id="alertBoxExperiment" class="alertFrame" style="visibility: hidden; width: 500px; height: 300px;">
+         <div class="alertTextH">
+            <p style="margin-top: 25px; font-size: 20px; font-weight: bold; color:#cc00ff;" ><img src="experiment_icon.png">Are You Ready for Your Experiment?</p>
+			
+            <!-- <p style="text-align: left; margin-left: 40px; font-size: 15px;">Your hypothesis is</p> -->
+            <!-- <span id="h1txt_d" class="hBox"></span> -->
+            <!-- <span id="h2txt_d"></span> -->
+            <!-- <span id="h3txt_d" class="hBox"></span> -->
+            <p style="font-size: 15px; margin-top: 45px; ">Set up an experiment to <b>TEST YOUR <font color="red">HYPOTHESIS</font></b> using the settings for <font color="orange"><b>Light Energy</b></font> and <font color="blue"><b>Matter (water and carbon dioxide)</b></font>.
+            </p>
+            <button class="submit" style="margin-left: -20px; margin-top: 30px; width: 60px; height: 18px; position: absolute; border: 1px solid black; z-index: 2;"onclick = "document.getElementById('alertBoxExperiment').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; stopAudio();">Close</button>
+         </div>
+      </div>
+      <div id="alertBoxAnalyze" class="alertFrame" style="visibility: hidden; width: 500px; height: 300px;">
+         <div class="alertTextH">
+            
+            <p style="text-align: left; margin-top: 2px; font-size: 15px; margin-left: 15px; text-align: center;" id="tableFeedback">Great job! You have collected the data from your experiment.</p>
+
+			<button class="submit2" style="position: absolute; margin-left: -60px; margin-top: -10px; width: 130px; height: 30px;" onclick="stopAudio(); document.getElementById('alertBoxAnalyze').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; stopAudio(); saveStateToWISE('run-another-trial');">Okay</button><br><br>
+            
+         </div>
+      </div>
+      <div id="alertBoxAnalysisIncorrect" class="alertFrame" style="visibility: hidden; width: 500px; height: 300px;">
+         <div class="alertTextH">
+            <p style="margin-top: 25px; font-size: 20px; font-weight: bold;" ><img src='analysis_icon.png'>Analysis</p>
+            <p style="text-align: left; margin-left: 40px; font-size: 15px;">Oh no! You have some <font color="red">incorrect ideas in your Analysis</font> <span class="analysisNumber"></span>.</br></br>Use your data table to <font color="blue">REVISE your Analysis answers</font>, OR RUN another experiment to <font color="blue">collect more data</font>.</p>
+            <button class="submit2" style="position: absolute; margin-left: -40px; margin-top: 10px; width: 90px;" onclick="stopAudio(); document.getElementById('alertBoxAnalysisIncorrect').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; stopAudio();">Okay</button>
+         </div>
+      </div>
+      <div id="alertBoxAnalysisCorrect" class="alertFrame" style="visibility: hidden; width: 500px; height: 300px;">
+         <div class="alertTextH">
+            <p style="margin-top: 25px; font-size: 20px; font-weight: bold;" >Analysis</p>
+            <p style="text-align: left; margin-left: 40px; font-size: 15px;">Congratulations! You have unlocked the Reasoning.</br></br><font color="green"><u>Scroll down</u> to answer the Reasoning for your experiments using the data you collected in your table.</font> </p>
+            <button class="submit2" style="position: absolute; margin-left: -40px; margin-top: 10px; width: 90px;" onclick="stopAudio(); document.getElementById('alertBoxAnalysisCorrect').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; stopAudio(); saveStateToWISE('alert-analysis-correct-btn');">Okay</button>
+         </div>
+      </div>
+      <div id="alertBoxAnalysisFeedback" class="alertFrame" style="width: 500px; height: 300px; visibility: hidden;">
+         <div class="alertTextH" style="width: 490px; height: 290px;">
+            <!--<p style="margin-top: 25px; font-size: 20px; font-weight: bold;" ><img src="mod_incorrect.png"><font color='red'>Incorrect</font> Analysis</p> -->
+            <p style="text-align: center; font-size: 14px;" id="alertBoxAnalysisFeedbackMainText">
+            </p>
+            <!-- button to lead you to next level -->
+            <button id="analyzeMoveOnBtn" class="submit2" style="visibility: hidden; position: absolute; margin-left: -40px; margin-top: 10px; width: 90px;" onclick="stopAudio(); document.getElementById('alertBoxAnalysisFeedback').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; stopAudio(); saveStateToWISE('alert-analysis-correct-btn'); document.getElementById('analyzeMoveOnBtn').style.visibility = 'hidden'; ">Okay</button>
+            <!-- button to make you analyze again -->
+            <button id="analyzeAgainBtn" class="submit2" style="position: absolute; margin-left: -40px; margin-top: 10px; width: 90px; visibility: hidden;" onclick="stopAudio(); document.getElementById('alertBoxAnalysisFeedback').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; stopAudio(); saveStateToWISE('alert-analysis-correct-btn'); document.getElementById('analyzeAgainBtn').style.visibility = 'hidden';">Okay</button>
+            <div>
+               <!-- KELLY put animation here -->
+            </div>
+         </div>
+      </div>
+      <div id="alertBoxCorrect" class="alertFrame" style="visibility: hidden; width: 500px; height: 300px;">
+         <div class="alertTextH">
+ 
+            <p style="margin-top: 5px; text-align: center; font-size: 20px;"><img src='unlocked.png'><font color='green'><b>Data Analysis Unlocked!</b></font></p><img src='cr_sim_goodjob.png'>Congratulations! You have successfully completed enough experiments to <font color='fusha'>ANALYZE your data</font>.<br><br><font color='red'><u>SCROLL DOWN</u> and answer the <font color='green'>Analysis question</font> below.<br><img src='0_arrow.png'></font><br>
+	
+            <button class="submit2" style="position: absolute; margin-left: -40px; margin-top: 10px; width: 90px;" onclick="stopAudio(); document.getElementById('alertBoxCorrect').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; saveStateToWISE('alert-box-correct-data-btn');">Okay</button>
+         </div>
+      </div>
+      <div id="alertBoxIncorrectTrialNum" class="alertFrame" style="visibility: hidden; width: 500px; height: 300px;">
+         <div class="alertTextH">
+            <p style="margin-top: 20px; font-size: 20px; font-weight: bold;" ><img src='experiment.png'><font color="red">You Need</font> <font color="green"><u>TWO</u> CORRECT</font> <font color="red">Experiments!</font></p>
+            <p style="text-align: left; margin-left: 40px; font-size: 15px;">You have only setup 1 experiment.</br></br><font color="red">You need to set up <span style="font-weight: bold; font-style: italic;">at least <font color="blue"><u>2</u> different and <font color='green'><u>CORRECT</u></font> </font></span> experiments before you can move on to your <font color="fusha"><b>Analysis</b></font>.</font> </p>
+            <button class="submit2" style="position: absolute; margin-left: -40px; margin-top: 10px; width: 90px;" onclick="stopAudio(); document.getElementById('alertBoxIncorrectTrialNum').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; stopAudio();">Okay</button>
+         </div>
+      </div>
+      <div id="alertBoxIncorrect" class="alertFrame" style="visibility: hidden; width: 500px; height: 300px;">
+         <div class="alertTextH">
+            <p style="margin-top: 25px; font-size: 20px; font-weight: bold;" >Data Collection</p>
+            <p style="text-align: left; margin-left: 40px; font-size: 15px;" id="dataIncorrectText">You are NOT ready to analyze your data!</br></br>You have some <u>incorrect</u> values in your table!</br></br>You need to repeat the experiment and fix your data collection before you can move on to your Analysis.</p>
+            <button class="submit2" style="position: absolute; margin-left: -40px; margin-top: 20px; width: 90px;" onclick="stopAudio(); document.getElementById('alertBoxIncorrect').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; stopAudio();">Okay</button>
+         </div>
+      </div>
+      <div id="alertBoxSubmitLevel" class="alertFrame" style="visibility: hidden; width: 500px; height: 300px;">
+         <div class="alertTextH">
+            <p style="margin-top: 25px; font-size: 20px; font-weight: bold;" id="submitTxt"></p>
+            <button class="submit2" style="position: absolute; margin-left: -40px; margin-top: 20px; width: 90px;" onclick="stopAudio(); document.getElementById('alertBoxSubmitLevel').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; stopAudio(); saveStateToWISE('alert-box-submit-level-btn');">Okay</button>
+         </div>
+      </div>
+      <div id="alertBoxComplete" class="alertFrame" style="visibility: hidden;">
+         <div class="alertText">
+            <button class="submit2" style="position: absolute; margin-left: -45px;  margin-top: 242px; width: 90px;" onclick="stopAudio(); resetMiniTable(); document.getElementById('alertBoxComplete').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; saveStateToWISE('alert-enter-data');">Enter Data</button>
+            <p id="alertTextComplete" style="margin-top: 10px; font-size: 15px;" >
+            </p>
+         </div>
+      </div>
+      <div id="alertBoxCompleteThermal" class="alertFrame" style="visibility: hidden; width: 460px; height: 300px;">
+         <div class="alertText" style="width: 450px; height: 290px;">
+            <button class="submit2" style="position: absolute; margin-left: -45px;  margin-top: 250px; width: 90px;" onclick="stopAudio(); resetMiniTable(); document.getElementById('alertBoxCompleteThermal').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; saveStateToWISE('alert-enter-data');">Enter Data</button>
+            <p id="alertTextCompleteThermal" style="margin-top: 10px; font-size: 15px;" >
+            </p>
+         </div>
+      </div>
+      <div id="alertBoxNext" class="alertFrame" style="visibility: hidden; width: 460px; height: 250px;">
+         <div class="alertText" style="width: 450px; height: 240px;">
+            <button class="submit2" style="position: absolute; margin-left: -45px;  margin-top: 200px; width: 90px;" onclick="stopAudio(); alertBoxCompleteThermal(); document.getElementById('alertBoxNext').style.visibility = 'hidden'; saveStateToWISE('alert-next');">Next</button>
+            <p id="alertTextNext" style="margin-top: 10px; font-size: 15px;" >
+            </p>
+         </div>
+      </div>
+      <div class="alertFrame" id="alertBoxTalked" style="visibility: hidden; width: 460px; height: 250px;">
+         <div class="alertText" style="width: 450px; height: 240px;">
+            <button class="submit2" 
+               onclick=" stopAudio(); if (stage == 0){playing = true; stage = 1; document.getElementById( 'playPause' ).innerHTML = '<b>Pause</b>';
+               document.getElementById( 'playPause' ).style.background = '#b77';} ; document.getElementById('alertBoxTalked').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; saveStateToWISE('alert-we-talked');" style="position: absolute; margin-left: -45px; margin-top: 200px; width: 90px;">
+            We Talked
+            </button>
+            <p id="alertTextTalked" style="margin-top: 10px; font-size: 15px;">
+            </p>
+         </div>
+      </div>
+      <div id="alertBoxTrials" class="alertFrame" style="visibility: hidden;">
+         <div class="alertText">
+            <p id="alertTextTrials" style="margin-top: 10px; font-size: 15px; " ></p>
+            <button class="submit" style="margin-left: -25px; margin-top: 50px; width: 60px; height: 18px; position: absolute; border: 1px solid black; z-index: 2;" 
+               onclick="stopAudio(); document.getElementById('alertBoxTrials').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; saveStateToWISE('alert-trails-left-close');">Close</button>
+         </div>
+      </div>
+      <div id="alertBoxClose" class="alertFrame" style="visibility: hidden;">
+         <div class="alertText">
+            <p id="alertTextClose" style="margin-top: 10px; font-size: 15px; color: black;" ></p>
+            <button class="submit" style="margin-left: -25px; margin-top: 50px; width: 60px; height: 18px; position: absolute; border: 1px solid black; z-index: 2;" 
+               onclick="stopAudio(); document.getElementById('alertBoxClose').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden';">Close</button>
+         </div>
+      </div>
+      <div id="confirmBox" class="alertFrame" style="visibility: hidden;">
+         <div class="alertText">
+
+            <button class="submit2" style="position: absolute; margin-left: -70px;  margin-top: 200px;" onclick="stopAudio(); document.getElementById('confirmBox').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; saveStateToWISE('alert-confirm-no');">No</button>
+			<button class="submit2" style="position: absolute; margin-left: 10px; margin-top: 200px;" onclick="stopAudio(); confirmCall(); document.getElementById('confirmBox').style.visibility = 'hidden'; saveStateToWISE('alert-confirm-yes');WhichBoxToShow();">Yes</button>
+            <p id="confirmText" style="margin-top: 10px; font-size: 15px;" >
+            </p>
+         </div>
+      </div>
+      <button class="controlButton" style="margin-top: 370px; margin-left: 10px;" onclick="togglePlayPause(); if (stage == 0){playing = true; stage = 1; document.getElementById( 'playPause' ).innerHTML = '<b>Pause</b>';
+         document.getElementById( 'playPause' ).style.background = '#b77';} ;" id="playPause" onmouseover="btnHover(this)" onmouseout="btnNormal(this)"><b>Run</b></button>
+      <button class="controlButton" style="margin-top: 370px; margin-left: 115px;" onclick="attemptReset(); saveStateToWISE('Reset'); "><b>Reset</b></button>
+      <button class="instr" style="margin-left: 224px; margin-top: 0px;" onclick="document.getElementById('instructions').style.visibility = 'visible'; document.getElementById('film').style.visibility = 'visible'; saveStateToWISE('alert-instruction');">?</button> 
+      <canvas id="mainCanvas" width="900px" height="400px" style="z-index: 1;">
+         <!--width="720px" height="440px"-->
+         <!--width="900px" height="450px" 2/13/2018-->
+      </canvas>
+      <!--Light Energy, Water(H20) & Carbon Dioxide(CO2) menu-->
+      <div id="audText">
+         <p style="bottom: 420px; left: 688px; font-size: 14px; font-weight: bold;" class="textStyle"><b><font color="white"><b><mark>ENERGY</mark></b> Graph: Amount of <b><mark>ENERGY</mark></b></font></p>
+         <p  style="bottom: 435px; left: 704px; font-size: 14px;" class="textStyle"><font color="white">Involved in</font> <a onclick="showInfo('photosynthesis');" href="javascript:void(0);"><font color="#ffc5c6">Photosynthesis</a></font></p>
+         <a onclick="showInfo('lightenergy');" href="javascript:void(0);" style="bottom: 368px; left: 748px; font-size: 15px;" class="textStyle"><font color="orange">Light</font></a>
+         <a onclick="showInfo('lightenergy');" href="javascript:void(0);" style="bottom: 354px; left: 709px; font-size: 15px;" class="textStyle"><font color="orange">Energy</font></a>
+         <a onclick="showInfo('chemicalenergy');" href="javascript:void(0);" style="bottom: 368px; left: 737px; font-size: 15px;" class="textStyle"><font color="#339933">Chemical</font></a>
+         <a onclick="showInfo('chemicalenergy');" href="javascript:void(0);" style="bottom: 354px; left: 683px; font-size: 15px;" class="textStyle"><font color="#339933">Energy</font></a>
+         <p style="bottom: 322px; left: 684px; font-size: 14px;" class="textStyle"><font color="white"><span style="background-color: #66b9bf"><a onclick="showInfo('matter');" href="javascript:void(0);" class="textStyle"> <b><span style="background-color: #66b9bf">MATTER</span></b></a></span></b> Graph: Amount of<a onclick="showInfo('matter');" href="javascript:void(0);" class="textStyle"> <b><span style="background-color: #66b9bf">MATTER</span></b></a> </font></p>
+         <p style="bottom: 337px; left: 712px;font-size: 14px;" class="textStyle"> <font color="white">Involved in</font> <a onclick="showInfo('photosynthesis');" href="javascript:void(0);"><font color="#ffc5c6">Photosynthesis</font></a></p>
+         <p style="bottom: 260px; left: 725px; font-size: 14px;" class="textStyle">H<sub>2</sub>O &nbsp;+ &nbsp;<a onclick="showInfo('CO2');" href="javascript:void(0);">CO<sub>2</sub></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="showInfo('glucose');" href="javascript:void(0);">Glucose</a> &nbsp;+ &nbsp;<a onclick="showInfo('oxygen');" href="javascript:void(0);">O<sub>2</sub></a></p>
+         <br><a onclick="showInfo('lightenergy');" href="javascript:void(0);" style="bottom: 380px; left: 16px; " class="textStyle"><font color="orange"><b>Light</b></font></a>
+         <a onclick="showInfo('lightenergy');" href="javascript:void(0);" style="bottom: 365px; left: -24px; " class="textStyle"><font color="orange"><b>Energy</b></font></a>
+         <p style="bottom: 415px; left: 108px; font-size: 14px; font-weight: bold;" class="textStyle">Water (H<sub>2</sub>O) & </p>
+         <a onclick="showInfo('CO2');" href="javascript:void(0);" style="bottom: 435px; left: 88px; " class="textStyle"><font color="blue"><b>Carbon Dioxide(CO<sub>2</sub>)</font></b></a>
+      </div>
+      <button class="dis" id="fasterBtn" style="z-index: 1; position: relative; bottom: 385px;left: 12px; height: 20px;border-radius: 5px;border: 1px solid black; width: 98px;" onclick="toggleFaster();"><b>2x Faster</b></button>
+      <div id="draggable" class="ui-widget-content" style="left: 60px; top: 330px; border: 2px solid black; border-radius: 20px; overflow: hidden; visibility: hidden; width: 659px;">
+         <table class="evm tblGray" style="width: 600px;">
+            <tr>
+               <th class="tg-1jzx" style="width:13px;"></th>
+
+               <th class="tg-hvis"  style="width:266;"><b>Energy</th>
+
+               <th class="tg-hvis"  style="width:266;"><b>Matter (molecules)</th>
+            </tr>
+         </table>
+         <table class="tableHeader" style="width: 600px;">
+            <tr>
+               <th class="tg-1jzx2" onclick="" style="width:41px;"></th>
+               <th class="tg-hvis2" onclick="" style="width:92;"><b>Setting: </b><br>Light Energy</th>
+               <th class="tg-hvis2" onclick="" style="width:93;"><b>Before: </b><br><b style="color: #ffd24e;">Light Energy</b></th>
+               <th class="tg-hvis2" onclick="" style="width:93;"><b>After: </b><br><b style="color: #18b661;">Chemical Energy</b></th>
+               <th class="tg-hvis2" onclick="" style="width:93;"><b>Setting: </b><br>H<sub>2</sub>O &amp; CO<sub>2</sub></th>
+               <th class="tg-hvis2" onclick="" style="width:93;"><b>Before:   </b><br><b style="color: #0000ff;">H<sub>2</sub>O + CO<sub>2</sub></b> </th>
+               <th class="tg-hvis2" onclick="" style="width:93;"><b>After:    </b><br><b style="color: #12b4f1;">Glucose + O<sub>2</sub></b></th>
+            </tr>
+         </table>
+         <table class="tg" style="width: 600px;">
+            <tr>
+               <td class="tg-s27t" id="trialMini" style="width: 40px;">Trial 1</td>
+               <td class="tg-7u08" id="energySettingMini" style="width:91px;"></td>
+               <td class="tg-7u08 tblYellow" style="width:91px;">
+                  <select class="form-control" id="beMini" onChange="syncTables(true);">
+				     <!--<option selected disabled value=""></option>-->
+                     <option>None</option>
+                     <option>Some</option>
+                  </select>
+               </td>
+               <td class="tg-7u08 tblGreen" style="width:91px;">
+                  <select class="form-control" id="aeMini" onChange="syncTables(true);">
+					 <!--<option selected disabled value=""></option>-->
+                     <option>None</option>
+                     <option>Some</option>
+                  </select>
+               </td>
+               <td class="tg-7u08" id="matterSettingMini" style="width:91px;"></td>
+               <td class="tg-7u08 tblDarkBlue" style="width:91px;">
+                  <select class="form-control" id="bmMini" onChange="syncTables(true);">
+                     <!--<option selected disabled value=""></option>-->
+					 <option>None</option>
+                     <option>Some</option>
+                  </select>
+               </td>
+               <td class="tg-7u08 tblLightBlue" style="width:91px;">
+                  <select class="form-control" id="amMini" onChange="syncTables(true);">
+                     <!--<option selected disabled value=""></option>-->
+					 <option>None</option>
+                     <option>Some</option>
+                  </select>
+               </td>
+            </tr>
+         </table>
+        <!-- <button class="submit" style="margin-left: 602px; margin-top: -91px; width: 55px; height: 43px; border-top-right-radius: 16px;"    onclick=" termType = 'n2'; alertBoxClose('Your trial has been saved. </br> </br> <font color=\'red\'>Remember to RECORD your trial when the table is filled out.</font>'); document.getElementById('alertText').style.color = '#000'; saveStateToWISE('Save-Trial');">Save Trial</button> 
+		-->
+         <button class="submit" style="visibility:visible; margin-left: 602px; margin-top: -46px; width: 55px; height: 44px; border-bottom-right-radius: 16px;" id="nextTrialP" onclick="confirmBox('Are you sure you want to record your trial?<br/><br/>Once you record it, you <u>CANNOT</u> edit it.',1); termType = 'n4'; "><b><font color='blue'>Record Trial</font></b></button>
+      </div>
+      <div id="tabWrapper" style="margin-top: -340px;">
+         <div id="tabChangers">
+            <!--<button id="btn1" class="tabB" onclick="openTab('level1page', 'btn1')" style="height: 37px; background-color: #a9c6e6;">Level 1</button>
+            <!-- <button id="btn2" class="tabB" onclick="openTab('level2page', 'btn2')" disabled="" style="background-color: #c0c0c0;">Level 2 <img src='lock.png' width='20px' height='20px'></button>-->
+         </div>
+		 
+         <div class="level">
+            <div id="hypothesis1" style="margin-right: 5px">
+               <span style="float: left; padding: 1px;" id="hBox1_title"><b><font color="blue"><img src="predict.png">Hypothesis</font></b></span>
+               <div class="hypothesisBox" id="hBox_1" style="clear: right; visibility: hidden;">
+                  <div style="margin-top: 4px;">
+                     When
+                     <span id="h1_text_1" class="hBox" style="background-color: white;"></span><!--<img width='20' height='20'id='HC_1' style="visibility: hidden;" src='check.png'>-->
+                     <span id="h2_text_1"></span>
+                     <span id="h3_text_1" class="hBox" style="background-color: white;"></span>.<!--<img width='20' height='20'id='HC_3' style="visibility: hidden; left: 200px; margin-left: 740px; margin-top: -23px; float: left;" src='check.png'>-->
+                  </div>
+               </div>
+            </div>
+            <div id="hypothesis2" style="display: block; float: left; margin-top: -57px; visibility: hidden;">
+               <p style=" float: left; padding: 5px; "><b><font color="blue">Hypothesis 2</font></b></p>
+               <div class="hypothesisBox" id="hBox_2" style=" clear: right;">
+                  <div style="margin-top: 5px;">
+                     <span id="h2_text_2"></span>
+                     <span id="h1_text_2" class="hBox" style="background-color: white;"></span>
+                     <span id="h3_text_2" class="hBox" style="background-color: white;"></span>
+                     .
+                  </div>
+               </div>
+            </div>
+
+            <div class="data" style="clear:both;">
+               <!-- start table -->
+			   
+               <div id="tableWrapper" style="/*visibility: hidden;*/ margin-top: -330px;">
+                  <table class="evm">
+                     <tr>
+                        <th class="tg-1jzx"><span style="left: 1px; font-weight: bold;"><img src="datacollection_icon.png"><font color="blue">Data</font></span></th>
+                        <th class="tg-hvis"><b>Energy</th>
+                        <th class="tg-hvis"><b>Matter (molecules)</th>
+                     </tr>
+                  </table>
+                  <table class="tableHeader">
+                     <tr>
+                        <th class="tg-1jzx" onclick="sortTable(0); saveStateToWISE('Sort Trial');"><img src="arrow.png" class="arrow" style="visibility: hidden; margin-left: 32px; transform: rotate(0deg); -ms-transform: rotate(0deg); webkit-transform: rotate(0deg);"></img></th>
+                        <th class="tg-hvis" onclick="sortTable(1); saveStateToWISE('Sort Energy Setting');"><img src="arrow.png" class="arrow" style="visibility: hidden;"></img><b>Setting:    </b><br>Light Energy</th>
+                        <th class="tg-hvis" onclick="sortTable(2); saveStateToWISE('Sort Energy Before');"> <img src="arrow.png" class="arrow" style="visibility: hidden;"></img><b>Before:  </b><br><b style="color: #ffd24e;">Light Energy</b></th>
+                        <th class="tg-hvis" onclick="sortTable(3); saveStateToWISE('Sort Energy After');">  <img src="arrow.png" class="arrow" style="visibility: hidden;"></img><b>After:      </b><br><b style="color: #18b661;">Chemical Energy</b></th>
+                        <th class="tg-hvis" onclick="sortTable(4); saveStateToWISE('Sort Matter Setting');">
+                           <!-- <img src="arrow.png" class="arrow" style="visibility: hidden;"></img> -->
+                           <b>Setting:    </b><br>H<sub>2</sub>O &amp; CO<sub>2</sub>
+                        </th>
+                        <th class="tg-hvis" onclick="sortTable(5); saveStateToWISE('Sort Matter Before');"> <img src="arrow.png" class="arrow" style="visibility: hidden;"></img><b>Before:  </b><br><b style="color: #0000ff;">H<sub>2</sub>O + CO<sub>2</sub></b></th>
+                        <th class="tg-hvis" onclick="sortTable(6); saveStateToWISE('Sort Matter After');">  <img src="arrow.png" class="arrow" style="visibility: hidden;"></img><b>After:      </b><br><b style="color: #12b4f1;">Glucose + O<sub>2</sub></b></th>
+                     </tr>
+                  </table>
+                  <div id="tableData" class="footer">
+                     <table class="tg" id="feedback_1">
+                        <tr id="row0_1" class="row1 rowAll" style="visibility: hidden;">
+                           <td class="tg-s27t">Trial 1</td>
+                           <td class="tg-7u08" id="energySetting0">None</td>
+                           <td class="tg-7u08 tblYellow">
+                              <select class="form-control" id="be0_1" onclick="syncTables(false);">
+                                 <option>None</option>
+                                 <option>Some</option>
+                              </select>
+                              <img src='check.png' width='20' height='20' id='checkBE0' />
+                           </td>
+                           <td class="tg-7u08 tblGreen">
+                              <select class="form-control" id="ae0_1" onclick="syncTables(false);">
+                                 <option>None</option>
+                                 <option>Some</option>
+                              </select>
+                              <img src='check.png' width='20' height='20' id='checkAE0' />
+                           </td>
+                           <td class="tg-7u08" id="matterSetting0">None</td>
+                           <td class="tg-7u08 tblDarkBlue">
+                              <select class="form-control" id="bm0_1" onclick="syncTables(false);">
+                                 <option>None</option>
+                                 <option>Some</option>
+                              </select>
+                              <img src='check.png' width='20' height='20' id='checkBM0' />
+                           </td>
+                           <td class="tg-7u08 tblLightBlue">
+                              <select class="form-control" id="am0_1" onclick="syncTables(false);">
+                                 <option>None</option>
+                                 <option>Some</option>
+                              </select>
+                              <img src='check.png' width='20' height='20' id='checkAM0' />
+                           </td>
+                        </tr>
+                     </table>
+                     <!-- table-2 -->
+                     <table class="tg" id="feedback_2">
+                        <tr id="row0_2" class="row2 rowAll" style="visibility: hidden;">
+                           <td class="tg-s27t">Trial 1</td>
+                           <td class="tg-7u08" id="energySetting0">None</td>
+                           <td class="tg-7u08 tblYellow">
+                              <select class="form-control" id="be0_2" onclick="syncTables(false);">
+                                 <option>None</option>
+                                 <option>Some</option>
+                              </select>
+                              <img src='check.png' width='20' height='20' id='checkBE0' />
+                           </td>
+                           <td class="tg-7u08 tblGreen">
+                              <select class="form-control" id="ae0_2" onclick="syncTables(false);">
+                                 <option>None</option>
+                                 <option>Some</option>
+                              </select>
+                              <img src='check.png' width='20' height='20' id='checkAE0' />
+                           </td>
+                           <td class="tg-7u08" id="matterSetting0">None</td>
+                           <td class="tg-7u08 tblDarkBlue">
+                              <select class="form-control" id="bm0_2" onclick="syncTables(false);">
+                                 <option>None</option>
+                                 <option>Some</option>
+                              </select>
+                              <img src='check.png' width='20' height='20' id='checkBM0' />
+                           </td>
+                           <td class="tg-7u08 tblLightBlue">
+                              <select class="form-control" id="am0_2" onclick="syncTables(false);">
+                                 <option>None</option>
+                                 <option>Some</option>
+                              </select>
+                              <img src='check.png' width='20' height='20' id='checkAM0' />
+                           </td>
+                        </tr>
+                     </table>
+                  </div>
+                  <div>
+                     <button id="nextTrial" class="submit" style="visibility:hidden; margin-left: 816px; margin-top: -159px;" onclick="confirmBox('Are you sure you want to submit it?<br/><br/>Once you submit it, you <u>CANNOT</u> edit it.',1);">Submit Trial</button> 
+                  </div>
+               </div>
+               <!-- end table -->
+            </div>
+            <div id="level1page">
+               <p style='float: left;'><b><font color="blue" id="ay1txt"><img src='analysis_icon.png'>Analysis</font></b></p>
+               <div class='analysis' id='analysis1' style="clear: right; visibility:hidden;">	
+				  When
+                  <select id='analysisDD1_1' onchange="this.style.backgroundColor = getColor(this.value);">
+                     <option value="" selected disabled hidden>Choose one</option>
+                     <option value="the reactants are" style="background-color: #9933ff;">the reactants are</option>
+                     <option value="chemical energy is" style="background-color: #02b119;">chemical energy is</option>
+                     <option value="water is" style="background-color: #0099ff;">water is</option>
+                     <option value="glucose is" style="background-color: #006600;">glucose is</option>
+                     <option value="" hidden>incorrect</option>
+                  </select>
+                  present, <font color="orange">light energy</font> can be <u>transformed into</u>
+                  <select id='analysisDD2_1' onchange="this.style.backgroundColor = getColor(this.value);">
+                     <option value="" selected disabled hidden>Choose one</option>
+                     <option value="oxygen" style="background-color: #cccccc;">oxygen</option>
+                     <option value="chemical energy" style="background-color: #02b119;">chemical energy</option>
+                     <option value="thermal energy" style="background-color: #ff0000;">thermal energy</option>
+                     <option value="glucose" style="background-color: #006600;">glucose</option>
+                     <option value="" hidden>incorrect</option>
+                  </select>
+				  .
+				  <div id="scoreboard1" class="scoreboard" style="visibility: inherit; font-size:14px;">Score: 0/100<img src='heart.png' class='life'></img><img src='heart.png' class='life'></img><img src='heart.png' class='life'></img></div>
+                  <button class='bBtn' id='submitAnalysis_1' style='margin-left: 620px; margin-top: -100px;' onclick='evalNum = 1; submitAnalysis();'>Submit</button>
+               </div>
+           
+               <div id='reasoning1' style=" clear: left; visibility:hidden;" >
+                  <div class="reasoningWrapper" style="height: 25px;">
+                     <!-- Our hypothesis was <span class='hBox'>incorrect</span>  
+                     The trials that support our analysis are <input type="" name="" id="supportTrials_1"></input>. We think this happened because-->
+                  </div>
+                  <input class="reasoning" id="reasoningTxt_1" style="clear: both;"></input>
+                  <button class="bBtn" style="margin-left: 700px;" onclick="evalNum = 1; submitLevel(); saveStateToWISE('submitted_reasoning_1');saveStateToWISE('support-trials-1');saveStateToWISE('reason-1');">Submit</button>
+                  <button class="bBtn" onclick="evalNum = 1; saveLevel(); saveStateToWISE('saved-reasoning-1');saveStateToWISE('support-trials-1');saveStateToWISE('reason-1');">Save</button>  
+               </div>
+            </div>
+            <div id="level2page" style="display: block; float: left; margin-top: -241px; visibility: hidden;">
+               <p id="ay2txt" style='float: left;'><b><font color="blue" >Analysis 2</font></b></p>
+			   <div id="scoreboard2" class="scoreboard" style="visibility: hidden;">Score: 0/100 <img src='heart.png' class='life'></img><img src='heart.png' class='life'></img><img src='heart.png' class='life'></img></div>			
+               <div class="analysis" id="analysis2" style="clear: right;">
+                  During photosynthesis, chemical energy
+                  <select id="analysisDD1_2">
+                     <option selected disabled hidden>Choose one</option>
+                     <option style="background-color: #fca338;">was transformed in</option>
+                     <option style="background-color: #4f44f8;">was stored in</option>
+                     <option style="background-color: #84aed7;">used up</option>
+                     <option style="background-color: #fe26f9;">created</option>
+                     <option hidden>Incorrect</option>
+                  </select>
+                  <select id="analysisDD2_2">
+                     <option selected disabled hidden>Choose one</option>
+                     <option style="background-color: #ffdd00;">light energy</option>
+                     <option style="background-color: #02b119;">thermal energy</option>
+                     <option style="background-color: #ff0000;">glucose</option>
+                     <option style="background-color: #006600;">the chloroplast</option>
+                     <option hidden>incorrect</option>
+                  </select>
+                  <button class="bBtn" id="submitAnalysis_2" style="margin-left: 620px;" onclick="evalNum = 2; submitAnalysis(); saveStateToWISE('submitted_analysis_2');">Submit</button>
+               </div>
+               <p id="rn2txt" style='float: left; clear: left;'><b><font color="blue" >Reasoning 2</font></b></p>
+               <div id='reasoning2' style="clear: left;" >
+                  <div class="analysis" style="height: 25px;">
+                     The trials that support our analysis are <input type="" name="" id="supportTrials_2"></input>. We think this happened because
+                  </div>
+                  <input class="reasoning" id="reasoningTxt_2" style="clear: both;"></input>
+                  <button class="bBtn" style="margin-left: 700px;" onclick="evalNum = 2; submitLevel(); saveStateToWISE('submitted_reasoning_2'); saveStateToWISE('support-trials-2'); saveStateToWISE('reason-2');">Submit</button>
+                  <button class="bBtn" onclick="evalNum = 2; saveLevel(); saveStateToWISE('saved-reasoning-2');saveStateToWISE('support-trials-2');saveStateToWISE('reason-2');">Save</button>  
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="alertFrame" id="alertBoxReQs" style="visibility: hidden; height: 150px; top: 930px;">
+         <div class="alertText" id="alertBoxFrame" style="height: 140px;">
+            <button class="close" onclick="stopAudio(); document.getElementById('alertBoxReQs').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; alerting = false;" style="position: absolute; margin-left: 160px; margin-top: -14px;">X</button>
+            <p id="alertTextReQs" style="margin-top: 10px; font-size: 15px;"></p>
+         </div>
+      </div>
+      <div class="" id="reQs" style="visibility: hidden;">
+         <div id="questionBlock">
+            <div id="assessmentsDiv">
+               <h2 style="text-align: center;">Reflection Questions</h2>
+               <div class="radio assessment" id="part1">
+                  <div class="promptDiv" id="prompt1">
+                     <span class="partSpan"></span><br>
+                     <br>
+                     <b>Kimori has two identical plants outside. <br><br>Plant A and Plant B get the SAME AMOUNT of matter (carbon dioxide and <font color="blue">water</font>), but <b><u><font color="red">NOT</font></u></b> the same amount of <span style="background-color: #FFFF00">light energy</span>. <br><br>Plant A gets MORE <span style="background-color: #FFFF00">light energy</span> than Plant B. Both plants survived.<br>
+                     <br></b>
+                     1.&nbsp;&nbsp;Both Plant A and Plant B have the same amount of <b>matter (carbon dioxide and water)</b>, but different amounts of <b><span style="background-color: #FFFF00">light energy</span></b>. <br><br><b>Which plant will have more <font color="#006600">chemical energy?</font></b>
+                  </div>
+                  <div class="choicesDiv" id="choiceA">
+                     <div class="choiceDiv" id="GVvEC6ocXQchoiceDiv">
+                        <input id="q1_A" class="interactable" name="I0TuWEc0m0" onchange="checked;" type="radio" value="radioA"><span class="choicetextSpan">1) <u>Plant A</u> will have MORE <font color="#006600">chemical energy</font>.</span>
+                     </div>
+                     <div class="choiceDiv" id="choiceB">
+                        <input id="q1_B" class="interactable" name="I0TuWEc0m0" onchange="checked;" type="radio" value="radioB"><span class="choicetextSpan">2) <u>Plant B</u> will have MORE <font color="#006600">chemical energy</font>.</span>
+                     </div>
+                     <div class="choiceDiv" id="choiceC">
+                        <input id="q1_C" class="interactable" name="I0TuWEc0m0" onchange="checked;" type="radio" value="radioC"><span class="choicetextSpan">3) <u>Plant A and Plant B</u> will have the SAME AMOUNT of <font color="#006600">chemical energy</font>.</span>
+                     </div>
+                  </div>
+               </div>
+               <div class="text assessment" id="part2">
+                  <div class="promptDiv" id="prompt2">
+                     <span class="partSpan">2.&nbsp;&nbsp;</span>Explain the answer you selected in Question 1. <br><br>Make sure your answer describes what you think happens to <b>matter</b> and <b>energy</b> in the plants using the evidence collected from the simulation above.
+                  </div>
+                  <div class="textboxDiv" id="answertext2">
+                     <textarea class="textboxTextArea interactable" id="textbox_q2"></textarea>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div id="submitButtonDiv" class="buttonDiv">
+            <input id="submitButton" class="qBtn" type="button" onclick="reQsChecked();" value="Submit the Questionnaire">
+            <input id="saveButton" class="qBtn" type="button" onclick="saveReQs();" value="Save your Answers">
+         </div>
+         <br>
+         <span style="font-size: 0.8em; display: none;" id="saveConfirmation">Your work has been submitted.</span>
+         &nbsp;
+         <div class="stepAlreadyCompleteDiv"></div>
+      </div>
+   </body>
+   <footer>
+      <script type="text/javascript" rel='script' src="2_photoSim_func.js"> </script>
+      <script>
+         function attemptReset(){
+                  termType = 'n11';
+                  confirmBox('<p align=center><img src=warning.png><b><font color=red>Are you sure you want to <u>RESET</u> the simulation?</font></b><br><br>This action will <font color=red>CLEAR</font> all of the settings, the animation, and the graphs.',0);
+               }
+         // function sortTable(n) {
+         //    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+         //    table = document.getElementById("feedback");
+         //    switching = true;
+         //    //Set the sorting direction to ascending:
+         //    dir = "asc"; 
+         //    /*Make a loop that will continue until
+         //    no switching has been done:*/
+         //    while (switching) {
+         //       //start by saying: no switching is done:
+         //       switching = false;
+         //       rows = table.getElementsByTagName("TR");
+         //       /*Loop through all table rows (except the
+         //       first, which contains table headers):*/
+         //       for (i = 0; i < (rows.length - 2); i++) {
+         //          //start by saying there should be no switching:
+         //          shouldSwitch = false;
+         //          /*Get the two elements you want to compare,
+         //          one from current row and one from the next:*/
+         //          x = rows[i].getElementsByTagName("TD")[n];
+         //          y = rows[i + 1].getElementsByTagName("TD")[n];
+         //          /*check if the two rows should switch place,
+         //          based on the direction, asc or desc:*/
+         //          if (dir == "asc") {
+         //             if(n == 0 || n == 1 || n == 4){
+         //                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+         //                   //if so, mark as a switch and break the loop:
+         //                   shouldSwitch= true;
+         //                   break;
+         //                }
+         //             }else{
+         //                if (x.children[0].value.toLowerCase() > y.children[0].value.toLowerCase()) {
+         //                   //if so, mark as a switch and break the loop:
+         //                   shouldSwitch= true;
+         //                   break;
+         //                }
+         //             }
+         //          } else if (dir == "desc") {
+         //             if(n == 0 || n == 1 || n == 4){
+         //                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+         //                   //if so, mark as a switch and break the loop:
+         //                   shouldSwitch= true;
+         //                   break;
+         //                }
+         //             }else{
+         //                if (x.children[0].value.toLowerCase() < y.children[0].value.toLowerCase()) {
+         //                   //if so, mark as a switch and break the loop:
+         //                   shouldSwitch= true;
+         //                   break;
+         //                }
+         //             }
+         //          }
+         //       }
+         //       if (shouldSwitch) {
+         //          /*If a switch has been marked, make the switch
+         //          and mark that a switch has been done:*/
+         //          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+         //          switching = true;
+         //          //Each time a switch is done, increase this count by 1:
+         //          switchcount ++;      
+         //       } else {
+         //          /*If no switching has been done AND the direction is "asc",
+         //          set the direction to "desc" and run the while loop again.*/
+         //          if (switchcount == 0 && dir == "asc") {
+         //             dir = "desc";
+         //             switching = true;
+         //          }
+         //       }
+         //    }
+         //    var arrows = document.getElementsByClassName('arrow');
+            
+         //    for(var i=0; i<arrows.length; i++){
+         //       arrows[i].style.visibility = "hidden";
+         //    }
+            
+         //    //COMMENT THIS BACK IN TO SHOW THE ARROW
+         //    //arrows[n].style.visibility = "visible";
+         
+         
+         //    //if(n != 0){
+         //       if(dir == "desc"){
+         //          arrows[n].style.transform     = "rotate(180deg)";
+         //          arrows[n].style.webkitTransform  = "rotate(180deg)";
+         //          arrows[n].style.msTransform      = "rotate(180deg)";  
+         //       }else{
+         //          arrows[n].style.transform     = "rotate(0deg)";
+         //          arrows[n].style.webkitTransform  = "rotate(0deg)";
+         //          arrows[n].style.msTransform      = "rotate(0deg)";    
+         //       }
+         //    /*}else{
+         //       if(dir == "asc"){
+         //          arrows[n].style.transform     = "rotate(180deg)";
+         //          arrows[n].style.webkitTransform  = "rotate(180deg)";
+         //          arrows[n].style.msTransform      = "rotate(180deg)";  
+         //       }else{
+         //          arrows[n].style.transform     = "rotate(0deg)";
+         //          arrows[n].style.webkitTransform  = "rotate(0deg)";
+         //          arrows[n].style.msTransform      = "rotate(0deg)";    
+         //       }
+         //    }*/
+         // }
+         
+         $( function() {
+            $( "#draggable" ).draggable({
+               containment: "window"
+            });
+             $( ".alertFrame" ).draggable({
+                       //containment: "window"
+                   });
+                   $( "#instructions" ).draggable({
+                       //containment: "window"
+                   });
+         } );
+      </script>
+      <script>
+         reset();
+         document.getElementById('bm'+trial + '_' + currentOpenTab).value = "";
+         document.getElementById('am'+trial + '_' + currentOpenTab).value = "";
+         document.getElementById('be'+trial + '_' + currentOpenTab).value = "";
+         document.getElementById('ae'+trial + '_' + currentOpenTab).value = "";
+      </script>
+   </footer>
+</html>

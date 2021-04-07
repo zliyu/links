@@ -4,7 +4,7 @@
       <title>Photo Sim</title>
       <!-- Last Update 4_7_18 5:41pm by EB  -->
       <meta charset="utf-8"/>
-      <link rel="stylesheet" type="text/css" href="2_photoSim_style.css">
+      <link rel="stylesheet" type="text/css" href="3_photoSim_style.css">
       <script src="jquery-1.12.4.js"></script>
       <script src="jquery-ui.js"></script>
       <link rel="stylesheet" href="jquery-ui.css">
@@ -13,26 +13,26 @@
       <div id="activeArea">
       <div id="film" style="visibility: visible;"></div>
       <div id="instructions" style="visibility: visible;">
-         <div style="position: fixed; width: 590px; height: 335px; background: #fff; margin-left: 155px; margin-top: 80px; border: 1px solid black; font-size: 14px; font-weight: bold; padding: 7px; z-index: 2;">
+         <div class="instructionsBox">
             <!-- <input type="image" src="speaker.png" class="speaker" style="width: 25px; height: 25px;" onclick="termType = 'n1'; narration();  console.log(termType); " /> -->
-            <p align='center'><font size="5"> Can Light Energy Become Glucose?</font></p>You will conduct scientific experiments to explore <font color='#996633'>whether <font color='orange'>light energy</font> can be <font color="fusha">transformed into</font> <font color='green'>glucose (sugar)</font></font></u> using the simulation.<br>
-			
-            <ol>
-               <li><img src='predict.png'>Make your <font color="red">hypothesis</font>.</li>
-               <li><img src='experiment_icon.png'>Set up experiments to TEST your hypothesis by setting your <font color="purple"><a onclick="stopAudio(); showInfo('variables');" href="javascript:void(0);">variables</a></font> (amounts of <font color="orange">light energy</font> and <font color="blue">matter</font>).</li>
-               <li><img src='observe_icon.png'>Observe what happens to <font color="orange">light energy</font> and <font color="blue">matter (carbon dioxide and water)</font>.</li>
-               <li><img src='datacollection_icon.png'>Record data from the <mark>Energy <u>GRAPH</u></mark> and the <span style='background-color: #66b9bf'>Matter <u>GRAPH</u>.</span></li>
-			   <li><img src='unlocked.png'>Run at least <font color="#009933">2 different</font> trials to <u>UNLOCK</u> the <font color="red">ANALYSIS</font> questions.</li>
-			   <li><img src="analysis_icon.png">Scroll down to answer your <font color="red">ANALYSIS</font> questions.</li>
-            </ol>
-            You can review these instructions at any time by clicking on the grey box with the question mark.
+            <h3 style="text-align: center;"> Can Light Energy Become Glucose?</h3>
+            <span>You will conduct scientific experiments to explore whether <b style="color:orange">light energy</b> can be <b>transformed</b> into <b style="color:green">glucose (sugar)</b> using the simulation.</span>
+            <p>1. <img src='predict.png' class="alignicon">Make your <b style="color:red">hypothesis</b>.</p>
+            <p>2. <img src='experiment_icon.png' class="alignicon" height="25px">Set up experiments to TEST your hypothesis by setting your <b style="color:purple"><a onclick="stopAudio(); showInfo('variables');" href="javascript:void(0);">variables</a></b> (amounts of <b style="color:orange">light energy</b> and <b style="color:blue">matter</b>).</p>
+            <p>3. <img src='observe_icon.png' class="alignicon">Observe what happens to <b style="color:orange">light energy</b> and <b style="color:blue">matter (carbon dioxide and water)</b>.</p>
+            <p>4. <img src='datacollection_icon.png' class="alignicon">Record data from the <mark><b>Energy GRAPH</b></mark> and the <span style='background-color: #66b9bf'><b>Matter GRAPH</b></span>.</p>
+			   <p>5. <img src='unlocked.png' class="alignicon">Run at least <b style="color:#009933">2 different</b> trials to <b>UNLOCK</b> the <b style="color:red">ANALYSIS</b> questions.</p>
+			   <p>6. <img src="analysis_icon.png" class="alignicon">Scroll down to answer your <b style="color:red">ANALYSIS</b> questions.</p>
+            <span>You can review these instructions at any time by clicking on the <b style="color: rgb(0, 119, 255);">blue button</b> with the question mark.</span>
          </div>
-         <button class="submit" style="margin-left: 420px; margin-top: 405px; width: 60px; height: 18px; position: fixed; border: 1px solid black; z-index: 2;" 
+         <button class="submit" style="margin-left: 420px; margin-top: 470px; width: 60px; height: 18px; position: fixed; z-index: 2; border-radius: 2px;" 
             onclick="document.getElementById('instructions').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; stopAudio(); saveStateToWISE('alert-instruction-close'); preHAgain(true);">Close</button>
       </div>
       <div class="alertFrame" id="alertBoxTerms" style="visibility: hidden;">
          <div class="alertText" id="alertBoxTermsFrame">
-            <button class="close" onclick="stopAudio(); resetAlertBoxSize(300); document.getElementById('alertBoxTerms').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; alerting = false;" style="position: absolute; margin-left: 210px; margin-top: -14px; saveStateToWISE('term_X');">X</button>
+            <!-- not sure what is saveStateToWISE('term_X') -->
+            <!-- <button class="close" onclick="stopAudio(); resetAlertBoxSize(300); document.getElementById('alertBoxTerms').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; alerting = false;" style="position: absolute; margin-left: 210px; margin-top: -14px; saveStateToWISE('term_X');">X</button> -->
+            <button class="close" onclick="stopAudio(); resetAlertBoxSize(300); document.getElementById('alertBoxTerms').style.visibility = 'hidden'; document.getElementById('film').style.visibility = 'hidden'; alerting = false;" style="position: absolute; margin-left: 210px; margin-top: -14px;">X</button>
             <p id="alertTextTerms" style="margin-top: 10px; font-size: 15px;"></p>
          </div>
       </div>
@@ -224,14 +224,14 @@
          <a onclick="showInfo('chemicalenergy');" href="javascript:void(0);" style="bottom: 354px; left: 683px; font-size: 15px;" class="textStyle"><font color="#339933">Energy</font></a>
          <p style="bottom: 322px; left: 684px; font-size: 14px;" class="textStyle"><font color="white"><span style="background-color: #66b9bf"><a onclick="showInfo('matter');" href="javascript:void(0);" class="textStyle"> <b><span style="background-color: #66b9bf">MATTER</span></b></a></span></b> Graph: Amount of<a onclick="showInfo('matter');" href="javascript:void(0);" class="textStyle"> <b><span style="background-color: #66b9bf">MATTER</span></b></a> </font></p>
          <p style="bottom: 337px; left: 712px;font-size: 14px;" class="textStyle"> <font color="white">Involved in</font> <a onclick="showInfo('photosynthesis');" href="javascript:void(0);"><font color="#ffc5c6">Photosynthesis</font></a></p>
-         <p style="bottom: 260px; left: 725px; font-size: 14px;" class="textStyle">H<sub>2</sub>O &nbsp;+ &nbsp;<a onclick="showInfo('CO2');" href="javascript:void(0);">CO<sub>2</sub></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="showInfo('glucose');" href="javascript:void(0);">Glucose</a> &nbsp;+ &nbsp;<a onclick="showInfo('oxygen');" href="javascript:void(0);">O<sub>2</sub></a></p>
+         <p style="bottom: 260px; left: 725px; font-size: 14px;" class="textStyle">H<sub>2</sub>O &nbsp;+ &nbsp;<a onclick="showInfo('CO2');" href="javascript:void(0);">CO<sub>2</sub></a>&nbsp;&nbsp;→&nbsp;&nbsp;<a onclick="showInfo('glucose');" href="javascript:void(0);">Glucose</a> &nbsp;+ &nbsp;<a onclick="showInfo('oxygen');" href="javascript:void(0);">O<sub>2</sub></a></p>
          <br><a onclick="showInfo('lightenergy');" href="javascript:void(0);" style="bottom: 380px; left: 16px; " class="textStyle"><font color="orange"><b>Light</b></font></a>
          <a onclick="showInfo('lightenergy');" href="javascript:void(0);" style="bottom: 365px; left: -24px; " class="textStyle"><font color="orange"><b>Energy</b></font></a>
          <p style="bottom: 415px; left: 108px; font-size: 14px; font-weight: bold;" class="textStyle">Water (H<sub>2</sub>O) & </p>
          <a onclick="showInfo('CO2');" href="javascript:void(0);" style="bottom: 435px; left: 88px; " class="textStyle"><font color="blue"><b>Carbon Dioxide(CO<sub>2</sub>)</font></b></a>
       </div>
       <button class="dis" id="fasterBtn" style="z-index: 1; position: relative; bottom: 385px;left: 12px; height: 20px;border-radius: 5px;border: 1px solid black; width: 98px;" onclick="toggleFaster();"><b>2x Faster</b></button>
-      <div id="draggable" class="ui-widget-content" style="left: 60px; top: 330px; border: 2px solid black; border-radius: 20px; overflow: hidden; visibility: hidden; width: 659px;">
+      <div id="draggable" class="ui-widget-content" style="left: 60px; top: 330px; border: 2px solid black; border-radius: 10px; overflow: hidden; visibility: hidden; width: 659px;">
          <table class="evm tblGray" style="width: 600px;">
             <tr>
                <th class="tg-1jzx" style="width:13px;"></th>
@@ -245,7 +245,7 @@
             <tr>
                <th class="tg-1jzx2" onclick="" style="width:41px;"></th>
                <th class="tg-hvis2" onclick="" style="width:92;"><b>Setting: </b><br>Light Energy</th>
-               <th class="tg-hvis2" onclick="" style="width:93;"><b>Before: </b><br><b style="color: #ffd24e;">Light Energy</b></th>
+               <th class="tg-hvis2" onclick="" style="width:93;"><b>Before: </b><br><b style="color: orange;">Light Energy</b></th>
                <th class="tg-hvis2" onclick="" style="width:93;"><b>After: </b><br><b style="color: #18b661;">Chemical Energy</b></th>
                <th class="tg-hvis2" onclick="" style="width:93;"><b>Setting: </b><br>H<sub>2</sub>O &amp; CO<sub>2</sub></th>
                <th class="tg-hvis2" onclick="" style="width:93;"><b>Before:   </b><br><b style="color: #0000ff;">H<sub>2</sub>O + CO<sub>2</sub></b> </th>
@@ -255,7 +255,7 @@
          <table class="tg" style="width: 600px;">
             <tr>
                <td class="tg-s27t" id="trialMini" style="width: 40px;">Trial 1</td>
-               <td class="tg-7u08" id="energySettingMini" style="width:91px;"></td>
+               <td class="tg-7u08" style="background-color: white;" id="energySettingMini" style="width:91px;"></td>
                <td class="tg-7u08 tblYellow" style="width:91px;">
                   <select class="form-control" id="beMini" onChange="syncTables(true);">
 				     <!--<option selected disabled value=""></option>-->
@@ -270,7 +270,7 @@
                      <option>Some</option>
                   </select>
                </td>
-               <td class="tg-7u08" id="matterSettingMini" style="width:91px;"></td>
+               <td class="tg-7u08" style="background-color: white;" id="matterSettingMini" style="width:91px;"></td>
                <td class="tg-7u08 tblDarkBlue" style="width:91px;">
                   <select class="form-control" id="bmMini" onChange="syncTables(true);">
                      <!--<option selected disabled value=""></option>-->
@@ -299,7 +299,7 @@
 		 
          <div class="level">
             <div id="hypothesis1" style="margin-right: 5px">
-               <span style="float: left; padding: 1px;" id="hBox1_title"><b><font color="blue"><img src="predict.png">Hypothesis</font></b></span>
+               <p><b style="font-size: 18px;"><img src="predict.png" class="alignicon">Hypothesis</b></p>
                <div class="hypothesisBox" id="hBox_1" style="clear: right; visibility: hidden;">
                   <div style="margin-top: 4px;">
                      When
@@ -547,7 +547,7 @@
       </div>
    </body>
    <footer>
-      <script type="text/javascript" rel='script' src="2_photoSim_func.js"> </script>
+      <script type="text/javascript" rel='script' src="3_photoSim_func.js"> </script>
       <script>
          function attemptReset(){
                   termType = 'n11';

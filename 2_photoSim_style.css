@@ -202,6 +202,22 @@
 #instructions {
     z-index: 2;
 }
+.instructionsBox{
+    position: fixed;
+    width: 630px;
+    height: 435px; 
+    background-color: #fff;
+    color: #222;
+    margin-left: 130px;
+    margin-top: 40px;
+    font-size: 17px;
+    /* font-weight: bold;  */
+    z-index: 2;
+    border: 1px solid #aaa;
+    border-radius: 10px;
+    padding: 20px;
+    padding-top: 10px;
+}
 #film {
     opacity: 0.6;
     background-color: #000;
@@ -235,7 +251,7 @@
     font-size: 14px;
     font-weight: normal;
     text-align: center;
-    border: 1px solid rgb(110, 110, 110);
+    border: 1px solid #aaa;
     border-radius: 10px;
     padding: 10px;
 }
@@ -244,6 +260,7 @@
     position: absolute;
     background: #ffffff;
     color: #000;
+    border-radius: 2px;
 }
 .submit2 {
     border: 1px solid #41719d;
@@ -356,14 +373,13 @@
 .instr {
     width: 35px;
     height: 35px;
-    /* border: 1px solid black; */
+    border: 1px solid #aaa;
     background-color: rgb(0, 119, 255);
     color: rgb(255, 255, 255);
-    font-size: 18px;
+    font-size: 19px;
     font-weight: bold;
     position: absolute;
-    border-bottom-right-radius: 18px;
-    border: none;
+    /* border-bottom-right-radius: 18px; */
     border-radius: 5px;
 }
 .instr:hover {
@@ -458,7 +474,7 @@
     font-weight: normal;
     text-align: center;
     color: black;
-    border: 1px solid rgb(110, 110, 110);
+    border: 1px solid #aaa;
     border-radius: 10px;
     padding: 10px;
 }
@@ -494,12 +510,12 @@
 
 .hypothesisBox{
     background-color: #d3d3d3;
-    float: left;
-    width: 760px;
+    /* float: left; */
+    /* width: 760px;
     height: 28px;
-    margin: 5px;
-    padding: 1px;
-	text-align: left;
+    margin: 5px; */
+    padding: 7px;
+    border-radius: 5px;
 }
 
 .analysis{
@@ -568,4 +584,8 @@
 .life{
 	width: 15px;
     margin-left: 2px;
+}
+
+.alignicon{
+    margin-bottom: -3px;
 }
